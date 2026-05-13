@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Mi Pie Diabético{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-house text-info"></i> Hola, {{ paciente.nombre }}</h2>
+
+    {% if alertas %}
+    <div class="alert alert-danger shadow-sm">
+        <h5><i class="bi bi-exclamation-triangle"></i> Atención</h5>
+        {% for a in alertas %}
+        <p class="mb-1"><strong>{{ a.fecha.strftime('%d/%m/%Y') }}:</strong> {{ a.mensaje }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center {% if ultimo_seguimiento and ultimo_seguimiento.grado >= 3 %}border-danger{% elif ultimo_seguimiento and ultimo_seguimiento.grado == 2 %}border-warning{% else %}border-success{% endif %}">
+                <div class="card-body">
+                    <h5>Estado Actual</h5>
+                    {% if ultimo_seguimiento %}
+                    <div class="display-4">
+                        {% if ultimo_seguimiento.grado == 4 %}🔴{% elif ultimo_seguimiento.grado == 3 %}🟠{% elif ultimo_seguimiento.grado == 2 %}🟡{% else %}🟢{% endif %}
+                    </div>
+                    <h4>{{ ultimo_seguimiento.etiqueta }}</h4>
+                    <small class="text-muted">{{ ultimo_seguimiento.fecha.strftime('%d/%m/%Y %H:%M') }}</small>
+                    {% else %}
+                    <div class="display-4">❓</div>
+                    <h5>Sin registros</h5>
+                    <small>Realiza tu primer seguimiento</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-clipboard-check display-4 text-primary"></i>
+                    <h3>{{ total_seguimientos }}</h3>
+                    <p>Seguimientos registrados</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-calendar-check display-4 text-info"></i>
+                    <h3>{{ citas|length }}</h3>
+                    <p>Citas pendientes</p>
+                    {% for c in citas[:2] %}
+                    <small class="d-block text-muted"><i class="bi bi-calendar-event"></i> {{ c.fecha_cita.strftime('%d/%m/%Y %H:%M') }}</small>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <a href="{{ url_for('paciente_seguimiento') }}" class="btn btn-primary btn-lg w-100 shadow py-4">
+                <i class="bi bi-clipboard-check display-5"></i><br>
+                <strong>📋 Registrar Seguimiento de Hoy</strong><br>
+                <small>¿Cómo está tu pie hoy?</small>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{{ url_for('paciente_evolucion') }}" class="btn btn-outline-info btn-lg w-100 shadow py-4">
+                <i class="bi bi-graph-up display-5"></i><br>
+                <strong>📈 Ver mi Evolución</strong><br>
+                <small>Gráficas de tu progreso</small>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <a href="{{ url_for('descargar_resumen_paciente') }}" class="btn btn-outline-danger btn-lg w-100 shadow py-3">
+                <i class="bi bi-file-earmark-pdf display-6"></i><br>
+                <strong>📄 Descargar Mi Resumen PDF</strong><br>
+                <small>Llévalo a tu consulta médica</small>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{{ url_for('paciente_guia') }}" class="btn btn-outline-success btn-lg w-100 shadow py-3">
+                <i class="bi bi-book display-6"></i><br>
+                <strong>📖 Guía de Cuidados</strong><br>
+                <small>Cuidados del Pie Diabético</small>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

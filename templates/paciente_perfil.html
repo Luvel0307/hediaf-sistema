@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Mi Perfil{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="mb-4"><i class="bi bi-person-circle text-primary"></i> Mi Perfil</h2>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Datos Personales y Clínicos</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre completo</label>
+                            <input type="text" name="nombre" class="form-control" value="{{ paciente.nombre or '' }}" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Edad (años) <span class="text-danger">*</span></label>
+                                <input type="number" name="edad" class="form-control" min="1" max="120" value="{{ paciente.edad or '' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Sexo <span class="text-danger">*</span></label>
+                                <select name="sexo" class="form-select" required>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="Masculino" {% if paciente.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+                                    <option value="Femenino" {% if paciente.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
+                                    <option value="Otro" {% if paciente.sexo == 'Otro' %}selected{% endif %}>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tipo de diabetes <span class="text-danger">*</span></label>
+                                <select name="tipo_diabetes" class="form-select" required>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="Tipo 1" {% if paciente.tipo_diabetes == 'Tipo 1' %}selected{% endif %}>Tipo 1</option>
+                                    <option value="Tipo 2" {% if paciente.tipo_diabetes == 'Tipo 2' %}selected{% endif %}>Tipo 2</option>
+                                    <option value="Gestacional" {% if paciente.tipo_diabetes == 'Gestacional' %}selected{% endif %}>Gestacional</option>
+                                    <option value="Otro" {% if paciente.tipo_diabetes == 'Otro' %}selected{% endif %}>Otro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Años desde el diagnóstico</label>
+                                <input type="number" name="anios_diagnostico" class="form-control" min="0" max="80" value="{{ paciente.anios_diagnostico or '' }}">
+                                <small class="text-muted">Campo informativo, opcional</small>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle"></i> Estos datos ayudan a tu médico a brindarte una mejor atención.
+                            La <strong>edad</strong>, el <strong>tipo de diabetes</strong> y el <strong>sexo</strong> son importantes para la precisión del sistema.
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-lg"></i> Guardar Cambios
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <a href="{{ url_for('paciente_dashboard') }}" class="btn btn-outline-secondary mt-3">
+                <i class="bi bi-arrow-left"></i> Volver al Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

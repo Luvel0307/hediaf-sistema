@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Seguimiento Diario{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-clipboard-check text-primary"></i> ¿Cómo está tu pie hoy?</h2>
+    <p class="text-muted mb-4">Responde estas preguntas sencillas para registrar el estado de tu pie. <strong>Esto es solo para seguimiento, siempre consulta a tu médico.</strong></p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-primary text-white"><h5 class="mb-0">🔍 ¿Cómo se ve tu pie?</h5></div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">¿Cuántos de estos signos tiene tu pie?</label>
+                            <p class="small text-muted">Calor, enrojecimiento, dolor, hinchazón, secreción</p>
+                            <input type="range" class="form-range" name="signos_locales" min="0" max="4" step="1" value="0" id="signosR" oninput="document.getElementById('signosV').textContent=this.value">
+                            <div class="d-flex justify-content-between small"><span>Ninguno (0)</span><span>Todos (4)</span></div>
+                            <div class="text-center"><strong>Valor: <span id="signosV">0</span></strong></div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">¿Qué tan grande es el área roja alrededor de la herida? (cm)</label>
+                            <input type="number" name="eritema_cm" class="form-control" min="0" max="5" step="0.5" value="0">
+                            <small class="text-muted">0 = sin enrojecimiento</small>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">¿Qué tan profunda es la herida?</label>
+                            <select name="profundidad" class="form-select">
+                                <option value="0">Sin herida abierta</option>
+                                <option value="1">Herida superficial (solo piel)</option>
+                                <option value="2">Herida profunda (se ve tejido)</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">¿Tienes fiebre, escalofríos o te sientes muy mal?</label>
+                            <select name="signos_sist" class="form-select">
+                                <option value="0">No</option>
+                                <option value="1">Sí</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">¿Cómo sientes la circulación de tu pie?</label>
+                            <select name="isquemia" class="form-select">
+                                <option value="0">Siento el pie normal</option>
+                                <option value="1">El pie está frío o adormecido</option>
+                                <option value="2">El pie está muy frío, azul o sin pulso</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-info text-white"><h5 class="mb-0">🩺 Datos adicionales</h5></div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Glucosa capilar (mg/dL)</label>
+                            <input type="number" name="glucosa_mgdl" class="form-control" min="70" max="500" value="100">
+                            <small class="text-muted">Si te tomaste la glucosa hoy</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Temperatura (°C) - opcional</label>
+                            <input type="number" name="temperatura" class="form-control" min="35" max="42" step="0.1" placeholder="36.5">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nivel de dolor (0-10)</label>
+                            <input type="range" class="form-range" name="dolor_nivel" min="0" max="10" value="0" id="dolorR" oninput="document.getElementById('dolorV').textContent=this.value">
+                            <div class="d-flex justify-content-between small"><span>Sin dolor (0)</span><span>Máximo (10)</span></div>
+                            <div class="text-center"><strong>Valor: <span id="dolorV">0</span></strong></div>
+                        </div>
+
+                        <!-- Foto del pie con soporte de cámara móvil -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📷 Foto del pie (opcional)</label>
+                            <div class="d-flex gap-2 mb-2 flex-wrap">
+                                <button type="button" class="btn btn-outline-primary btn-sm flex-fill" id="btnTakePhotoSeg" onclick="document.getElementById('cameraInputSeg').click()">
+                                    <i class="bi bi-camera-fill"></i> Tomar Foto
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('fileInputSeg').click()">
+                                    <i class="bi bi-folder2-open"></i> Cargar Imagen
+                                </button>
+                            </div>
+                            <!-- Input cámara (para móviles) -->
+                            <input type="file" name="imagen" class="d-none" id="cameraInputSeg"
+                                   accept="image/*" capture="environment"
+                                   onchange="handleImageSelectSeg(this)">
+                            <!-- Input archivo (para desktop) -->
+                            <input type="file" class="d-none" id="fileInputSeg"
+                                   accept="image/png,image/jpeg,image/jpg,image/bmp"
+                                   onchange="transferFileSeg(this)">
+                            <!-- Preview -->
+                            <div class="mt-2 text-center" id="previewContainerSeg" style="display:none">
+                                <img id="previewSeg" class="img-fluid rounded shadow-sm" style="max-height: 200px">
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-warning" onclick="clearImageSeg()">
+                                        <i class="bi bi-arrow-clockwise"></i> Cambiar
+                                    </button>
+                                    <span class="badge bg-success ms-1" id="imgInfoSeg"></span>
+                                </div>
+                            </div>
+                            <small class="text-muted">Toma una foto de tu pie para que tu médico pueda verla</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Notas</label>
+                            <textarea name="notas" class="form-control" rows="3" placeholder="Ej: Cambié el apósito, tomé mi medicamento..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 shadow">
+                    <i class="bi bi-search"></i> Ver cómo está mi pie
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function handleImageSelectSeg(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.getElementById('previewSeg').src = ev.target.result;
+            document.getElementById('previewContainerSeg').style.display = 'block';
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+            document.getElementById('imgInfoSeg').textContent = file.name.substring(0, 15) + ' (' + sizeMB + ' MB)';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function transferFileSeg(fileInput) {
+    const cameraInput = document.getElementById('cameraInputSeg');
+    const dt = new DataTransfer();
+    if (fileInput.files[0]) {
+        dt.items.add(fileInput.files[0]);
+        cameraInput.files = dt.files;
+        handleImageSelectSeg(cameraInput);
+    }
+}
+
+function clearImageSeg() {
+    document.getElementById('cameraInputSeg').value = '';
+    document.getElementById('fileInputSeg').value = '';
+    document.getElementById('previewContainerSeg').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (!isMobile) {
+        document.getElementById('btnTakePhotoSeg').innerHTML = '<i class="bi bi-camera-fill"></i> Cámara';
+    }
+});
+</script>
+{% endblock %}

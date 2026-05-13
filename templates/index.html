@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Sistema Integral de Pie Diabético{% endblock %}
+{% block body_class %}bg-light{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-4 fw-bold text-primary mb-4">
+                <i class="bi bi-heart-pulse"></i> Sistema Integral de Pie Diabético
+            </h1>
+            <p class="lead text-muted mb-4">
+                Sistema híbrido que combina <strong>Deep Learning</strong> y <strong>Lógica Difusa Tipo-2</strong>
+                para la evaluación y seguimiento del pie diabético.
+            </p>
+            <p class="text-muted mb-5">
+                Basado en guías <strong>IWGDF 2023</strong>, <strong>NOM-015-SSA2-2010</strong> y protocolos <strong>SSA México</strong>.
+            </p>
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-primary shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-shield-lock display-4 text-primary"></i>
+                            <h5 class="card-title mt-3">Administrador</h5>
+                            <p class="card-text small">Gestión global del sistema, estadísticas y usuarios.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-success shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-clipboard2-pulse display-4 text-success"></i>
+                            <h5 class="card-title mt-3">Médico</h5>
+                            <p class="card-text small">Evaluación con IA, alertas, gestión de citas y expedientes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-info shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-heart display-4 text-info"></i>
+                            <h5 class="card-title mt-3">Paciente</h5>
+                            <p class="card-text small">Seguimiento diario, gráficas de evolución y guía de cuidados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-plus"></i> Registrarse
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="my-5">
+    <div class="row text-center g-4">
+        <div class="col-md-3"><div class="p-3"><i class="bi bi-cpu display-5 text-primary"></i><h6 class="mt-2">Deep Learning</h6><small class="text-muted">MobileNetV2 para clasificación de imágenes</small></div></div>
+        <div class="col-md-3"><div class="p-3"><i class="bi bi-diagram-3 display-5 text-success"></i><h6 class="mt-2">Lógica Difusa Tipo-2</h6><small class="text-muted">Evaluación de gravedad con incertidumbre</small></div></div>
+        <div class="col-md-3"><div class="p-3"><i class="bi bi-bell display-5 text-warning"></i><h6 class="mt-2">Alertas Automáticas</h6><small class="text-muted">Notificación al médico si gravedad ≥ 3</small></div></div>
+        <div class="col-md-3"><div class="p-3"><i class="bi bi-graph-up display-5 text-info"></i><h6 class="mt-2">Gráficas de Evolución</h6><small class="text-muted">Seguimiento temporal con Chart.js</small></div></div>
+    </div>
+</div>
+{% endblock %}

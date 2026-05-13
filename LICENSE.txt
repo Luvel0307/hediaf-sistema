@@ -1,0 +1,150 @@
+================================================================================
+                    LICENCIA DE USO RESTRINGIDO PARA INVESTIGACIÓN
+================================================================================
+
+Copyright (c) 2026 Guadalupe Vélez Pérez. Todos los derechos reservados.
+
+================================================================================
+
+TÍTULO DE LA OBRA:
+  "Sistema Integral para Evaluación y Seguimiento del Pie Diabético"
+  (Sistema Híbrido: Deep Learning + Lógica Difusa Tipo-2 Intervalar)
+
+AUTORA:
+  Guadalupe Vélez Pérez
+
+AÑO DE CREACIÓN:
+  2026
+
+VERSIÓN:
+  5.0
+
+================================================================================
+                              TÉRMINOS Y CONDICIONES
+================================================================================
+
+1. DEFINICIONES
+
+   a) "Obra" se refiere al código fuente, modelos de inteligencia artificial,
+      plantillas HTML, hojas de estilo, bases de datos, documentación técnica,
+      y cualquier otro material incluido en este repositorio.
+
+   b) "Autora" se refiere a Guadalupe Vélez Pérez, creadora y titular de los
+      derechos de propiedad intelectual de la Obra.
+
+   c) "Usuario" se refiere a cualquier persona o entidad que acceda, descargue,
+      copie o utilice la Obra.
+
+   d) "Uso Académico" se refiere al uso exclusivo para investigación científica,
+      enseñanza, tesis, publicaciones académicas y presentaciones en
+      instituciones educativas.
+
+2. PERMISOS OTORGADOS
+
+   Sujeto al cumplimiento de todos los términos de esta licencia, la Autora
+   otorga al Usuario un permiso limitado, no exclusivo, no transferible y
+   revocable para:
+
+   a) Revisar y estudiar el código fuente con fines académicos.
+   b) Ejecutar la aplicación localmente para fines de evaluación, investigación
+      y demostración académica.
+   c) Citar la Obra en publicaciones académicas, tesis, artículos científicos
+      y presentaciones, siempre que se otorgue crédito adecuado a la Autora.
+   d) Utilizar fragmentos del código (máximo 50 líneas) en trabajos académicos,
+      citando la fuente completa.
+
+3. RESTRICCIONES Y PROHIBICIONES
+
+   Queda estrictamente prohibido:
+
+   a) DISTRIBUCIÓN COMERCIAL: Vender, sublicenciar, alquilar o distribuir la
+      Obra o cualquier parte de ella con fines de lucro.
+   b) MODIFICACIÓN NO AUTORIZADA: Crear obras derivadas, adaptar, traducir,
+      descompilar, desensamblar o realizar ingeniería inversa de la Obra sin
+      autorización previa y por escrito de la Autora.
+   c) REDISTRIBUCIÓN: Distribuir copias de la Obra, ya sea en su totalidad o
+      parcialmente, a terceros sin autorización expresa de la Autora.
+   d) USO CLÍNICO SIN SUPERVISIÓN: Utilizar el sistema como herramienta de
+      diagnóstico clínico definitivo sin supervisión de un profesional médico
+      certificado. El sistema es una herramienta de apoyo a la decisión clínica.
+   e) USO EN PRODUCCIÓN: Desplegar la Obra en entornos de producción clínica
+      sin la validación regulatoria correspondiente y la autorización escrita
+      de la Autora.
+   f) ELIMINACIÓN DE CRÉDITOS: Eliminar, alterar u ocultar avisos de copyright,
+      marcas de autoría o esta licencia de cualquier copia de la Obra.
+   g) APROPIACIÓN: Presentar la Obra o partes sustanciales de ella como
+      trabajo propio.
+
+4. PROPIEDAD INTELECTUAL
+
+   a) La Obra está protegida por las leyes mexicanas de propiedad intelectual
+      (Ley Federal del Derecho de Autor, DOF 1996 y reformas), tratados
+      internacionales aplicables, y la legislación vigente en materia de
+      derechos de autor.
+   b) El modelo de Deep Learning (MobileNetV2) entrenado con datos propios,
+      las funciones de membresía del sistema de Lógica Difusa Tipo-2, las
+      reglas de inferencia, y el protocolo de asignación de antibióticos
+      constituyen desarrollos originales de la Autora.
+   c) Todos los derechos no otorgados expresamente en esta licencia quedan
+      reservados a la Autora.
+
+5. ATRIBUCIÓN REQUERIDA
+
+   Cualquier uso permitido de la Obra debe incluir la siguiente atribución:
+
+   "Sistema Integral para Evaluación y Seguimiento del Pie Diabético.
+    Desarrollado por Guadalupe Vélez Pérez, 2026.
+    Basado en guías IWGDF 2023, NOM-015-SSA2-2010 e IDSA 2012."
+
+6. DESCARGO DE RESPONSABILIDAD MÉDICA
+
+   a) Este sistema es una HERRAMIENTA DE APOYO a la decisión clínica y NO
+      sustituye el juicio profesional de un médico calificado.
+   b) Las recomendaciones de antibióticos generadas por el sistema son
+      sugerencias basadas en guías clínicas y DEBEN ser validadas por un
+      profesional de la salud antes de su prescripción.
+   c) La Autora NO asume responsabilidad por decisiones clínicas tomadas
+      exclusivamente con base en las salidas del sistema.
+   d) El uso del sistema para diagnóstico o tratamiento debe realizarse
+      bajo la responsabilidad y supervisión de profesionales de la salud
+      con cédula profesional vigente.
+
+7. LIMITACIÓN DE RESPONSABILIDAD
+
+   LA OBRA SE PROPORCIONA "TAL CUAL" ("AS IS"), SIN GARANTÍAS DE NINGÚN
+   TIPO, EXPRESAS O IMPLÍCITAS, INCLUYENDO PERO NO LIMITÁNDOSE A
+   GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR
+   O NO INFRACCIÓN. EN NINGÚN CASO LA AUTORA SERÁ RESPONSABLE POR
+   DAÑOS DIRECTOS, INDIRECTOS, INCIDENTALES, ESPECIALES, EJEMPLARES O
+   CONSECUENTES QUE SURJAN DEL USO O IMPOSIBILIDAD DE USO DE LA OBRA.
+
+8. VIGENCIA Y TERMINACIÓN
+
+   a) Esta licencia es efectiva a partir de la fecha de acceso a la Obra y
+      permanece vigente hasta su terminación.
+   b) La licencia se terminará automáticamente si el Usuario incumple
+      cualquiera de los términos establecidos en este documento.
+   c) Tras la terminación, el Usuario debe destruir todas las copias de la
+      Obra en su posesión.
+
+9. LEY APLICABLE Y JURISDICCIÓN
+
+   Esta licencia se regirá e interpretará de conformidad con las leyes
+   de los Estados Unidos Mexicanos. Para cualquier controversia derivada
+   de la interpretación o cumplimiento de esta licencia, las partes se
+   someten a la jurisdicción de los tribunales competentes de la Ciudad
+   de México, renunciando a cualquier otro fuero que pudiera corresponderles.
+
+10. CONTACTO
+
+    Para solicitar permisos adicionales, licencias comerciales o cualquier
+    consulta relacionada con esta Obra, contactar a:
+
+    Guadalupe Vélez Pérez
+    Autora y titular de derechos de propiedad intelectual
+    Correo electrónico: [correo por confirmar]
+
+================================================================================
+                         © 2026 Guadalupe Vélez Pérez
+                          Todos los derechos reservados
+================================================================================
