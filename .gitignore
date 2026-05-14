@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Entorno virtual
+venv/
+env/
+.venv/
+.env
+
+# Flask / SQLite (desarrollo local)
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads de pacientes (datos sensibles)
+static/uploads/*.jpg
+static/uploads/*.jpeg
+static/uploads/*.png
+static/uploads/*.bmp
+static/uploads/*.tif
+static/uploads/*.tiff
+!static/uploads/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Modelo compatible generado
+model_compatible.keras
+
+# Temporal
+/tmp/
+*.tmp
+*.bak
+
+# Secretos
+config_local.py
+secrets.py
+*.pem
+*.key
