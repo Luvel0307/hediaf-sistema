@@ -1234,40 +1234,72 @@ def api_evaluaciones(paciente_id):
 # ── Inicialización de BD ────────────────────────────────────
 
 def init_db():
-    """Crea las tablas e inserta datos iniciales"""
-    with app.app_context():
-        db.create_all()
+    """Wrapper legacy — delega a auto_init_database()."""
+    auto_init_database()
 
-        # Crear admin si no existe
-        if not Usuario.query.filter_by(username='admin').first():
+
+def auto_init_database():
+    """
+    Verifica e inicializa la base de datos automáticamente en el primer arranque.
+    - Crea tablas si no existen.
+    - Crea usuarios de prueba si la tabla está vacía.
+    - NO borra datos existentes ni crea duplicados.
+    """
+    with app.app_context():
+        try:
+            print("\n✅ Verificando base de datos...")
+
+            # 1. Crear tablas si no existen
+            db.create_all()
+            print("✅ Tablas verificadas / creadas correctamente")
+
+            # 2. Verificar si ya hay usuarios
+            usuarios_existentes = Usuario.query.count()
+            if usuarios_existentes > 0:
+                print(f"ℹ️  Base de datos ya inicializada ({usuarios_existentes} usuario(s) encontrados)")
+                return
+
+            # 3. No hay usuarios — crear los 3 de prueba
+            print("⏳ No se encontraron usuarios. Creando usuarios de prueba...")
+
+            # Admin
             admin = Usuario(username='admin', email='admin@piediabetico.mx',
                             nombre_completo='Administrador del Sistema', rol='admin')
             admin.set_password('admin123')
             db.session.add(admin)
+            print("   ✅ Usuario admin creado")
 
-        # Crear médico demo
-        if not Usuario.query.filter_by(username='dr_garcia').first():
+            # Médico
             medico = Usuario(username='dr_garcia', email='garcia@piediabetico.mx',
                              nombre_completo='Dr. Carlos García López', rol='medico',
                              cedula_profesional='12345678')
             medico.set_password('medico123')
             db.session.add(medico)
+            print("   ✅ Usuario dr_garcia (médico) creado")
 
-        # Crear paciente demo
-        if not Usuario.query.filter_by(username='paciente1').first():
+            # Paciente
             pac_user = Usuario(username='paciente1', email='paciente1@piediabetico.mx',
                                nombre_completo='María Hernández Ruiz', rol='paciente')
             pac_user.set_password('paciente123')
             db.session.add(pac_user)
             db.session.flush()
+            print("   ✅ Usuario paciente1 creado")
 
+            # Perfil de paciente asociado
             pac = Paciente(usuario_id=pac_user.id, nombre='María Hernández Ruiz',
                            edad=58, sexo='Femenino', tipo_diabetes='Tipo 2',
                            anios_diagnostico=12)
             db.session.add(pac)
 
-        db.session.commit()
-        print("✅ Base de datos inicializada")
+            db.session.commit()
+            print("✅ Usuarios de prueba creados exitosamente")
+            print("✅ Base de datos inicializada correctamente\n")
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"❌ Error al inicializar la base de datos: {e}")
+            import traceback
+            traceback.print_exc()
 
 
 # ── Inicialización para producción (gunicorn) ───────────────
