@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}Resultado de Evaluación{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-file-earmark-medical text-primary"></i> Resultado de Evaluación Clínica</h2>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <!-- Resultado Principal -->
+            <div class="card shadow mb-3" style="border-left: 5px solid {{ resultado.color }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0">
+                            {% if resultado.grado == 4 %}🔴{% elif resultado.grado == 3 %}🟠{% elif resultado.grado == 2 %}🟡{% else %}🟢{% endif %}
+                            Grado {{ resultado.grado }}/4 - {{ resultado.etiqueta }}
+                        </h3>
+                        <span class="badge fs-6 {% if resultado.grado >= 3 %}bg-danger{% elif resultado.grado == 2 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                            IWGDF 2023
+                        </span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="p-2 bg-light rounded text-center">
+                                <small class="text-muted">Intervalo Tipo-2</small><br>
+                                <strong>[{{ "%.3f"|format(resultado.gravedad_lower) }}, {{ "%.3f"|format(resultado.gravedad_upper) }}]</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-2 bg-light rounded text-center">
+                                <small class="text-muted">Valor Crisp</small><br>
+                                <strong>{{ "%.3f"|format(resultado.gravedad_crisp) }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-2 bg-light rounded text-center">
+                                <small class="text-muted">Confianza</small><br>
+                                <strong>{{ resultado.confianza }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar de gravedad -->
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Escala de Gravedad</label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar {% if resultado.grado >= 4 %}bg-danger{% elif resultado.grado == 3 %}bg-warning{% elif resultado.grado == 2 %}bg-info{% else %}bg-success{% endif %}"
+                                 style="width: {{ (resultado.gravedad_crisp / 4 * 100)|int }}%">
+                                {{ "%.2f"|format(resultado.gravedad_crisp) }} / 4.0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recomendación Clínica -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Recomendación Clínica</h5></div>
+                <div class="card-body">
+                    <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ resultado.recomendacion }}</pre>
+                </div>
+            </div>
+
+            <!-- Antibióticos (solo médico) -->
+            {% if antibioticos %}
+            <div class="card shadow-sm mb-3 border-warning">
+                <div class="card-header bg-warning text-dark"><h5 class="mb-0"><i class="bi bi-capsule"></i> Tratamiento Antibiótico Sugerido (IWGDF 2023 / NOM-015)</h5></div>
+                <div class="card-body">
+                    <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ antibioticos }}</pre>
+                    <small class="text-muted d-block mt-2"><i class="bi bi-info-circle"></i> Ajustar según cultivos y sensibilidad antimicrobiana.</small>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Resultado DL -->
+            {% if dl_resultado %}
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-cpu"></i> Análisis Deep Learning (CNN)</h5></div>
+                <div class="card-body">
+                    {% if dl_resultado.error is defined %}
+                    <div class="alert alert-warning">{{ dl_resultado.error }}</div>
+                    {% else %}
+                    <table class="table table-sm">
+                        <tr><th>Clasificación</th><td><strong>{{ dl_resultado.categoria }}</strong></td></tr>
+                        <tr><th>Probabilidad Úlcera Diabética</th><td>{{ "%.1f"|format(dl_resultado.probabilidad_diabetica * 100) }}%</td></tr>
+                        <tr><th>Confianza</th><td>{{ "%.1f"|format(dl_resultado.confianza * 100) }}%</td></tr>
+                        <tr><th>Umbral usado</th><td>{{ dl_resultado.umbral_usado }}</td></tr>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-person"></i> Paciente</h5></div>
+                <div class="card-body">
+                    <p><strong>{{ paciente.nombre }}</strong></p>
+                    <p class="mb-1">Edad: {{ paciente.edad or '-' }} años</p>
+                    <p class="mb-1">Sexo: {{ paciente.sexo or '-' }}</p>
+                    <p class="mb-0">Fecha: {{ evaluacion.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-list-check"></i> Parámetros</h5></div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr><td>Signos locales</td><td><strong>{{ evaluacion.signos_locales }}/4</strong></td></tr>
+                        <tr><td>Eritema</td><td><strong>{{ evaluacion.eritema_cm }} cm</strong></td></tr>
+                        <tr><td>Profundidad</td><td><strong>{{ ['Sin herida', 'Superficial', 'Profunda'][evaluacion.profundidad] }}</strong></td></tr>
+                        <tr><td>Signos sist.</td><td><strong>{{ 'Sí' if evaluacion.signos_sist else 'No' }}</strong></td></tr>
+                        <tr><td>Isquemia</td><td><strong>{{ ['Ninguna', 'Leve', 'Crítica'][evaluacion.isquemia] }}</strong></td></tr>
+                        <tr><td>Glucosa</td><td><strong>{{ evaluacion.glucosa_mgdl }} mg/dL</strong></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            {% if evaluacion.imagen_path %}
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-image"></i> Imagen</h5></div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='uploads/' + evaluacion.imagen_path) }}" class="img-fluid rounded" style="max-height: 250px">
+                </div>
+            </div>
+            {% endif %}
+
+            <a href="{{ url_for('descargar_reporte_medico', evaluacion_id=evaluacion.id) }}" class="btn btn-danger w-100 mb-2">
+                <i class="bi bi-file-earmark-pdf"></i> Descargar Reporte PDF
+            </a>
+            <a href="{{ url_for('medico_evaluar') }}" class="btn btn-primary w-100 mb-2"><i class="bi bi-plus-circle"></i> Nueva Evaluación</a>
+            <a href="{{ url_for('medico_historial', paciente_id=paciente.id) }}" class="btn btn-outline-info w-100"><i class="bi bi-clock-history"></i> Ver Historial</a>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <small class="text-muted">
+            <i class="bi bi-info-circle"></i>
+            Sistema de apoyo diagnóstico basado en IWGDF 2023, NOM-015-SSA2-2010, SSA México. <strong>No sustituye el criterio clínico.</strong>
+        </small>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %}Historial - {{ paciente.nombre }}{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-clock-history text-info"></i> Historial: {{ paciente.nombre }}</h2>
+    <div class="row mb-3">
+        <div class="col-md-3"><strong>Edad:</strong> {{ paciente.edad or '-' }} años</div>
+        <div class="col-md-3"><strong>Sexo:</strong> {{ paciente.sexo or '-' }}</div>
+        <div class="col-md-3"><strong>Diabetes:</strong> {{ paciente.tipo_diabetes or '-' }}</div>
+        <div class="col-md-3"><strong>Años diagnóstico:</strong> {{ paciente.anios_diagnostico or '-' }}</div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-graph-up"></i> Evolución de Gravedad</h5></div>
+                <div class="card-body"><canvas id="chartGravedad"></canvas></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-droplet"></i> Evolución de Glucosa</h5></div>
+                <div class="card-body"><canvas id="chartGlucosa"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de evaluaciones -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white"><h5 class="mb-0">Evaluaciones Médicas</h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Fecha</th><th>Grado</th><th>Etiqueta</th><th>Gravedad Crisp</th><th>Glucosa</th><th>Confianza</th></tr></thead>
+                    <tbody>
+                    {% for e in evaluaciones %}
+                    <tr>
+                        <td>{{ e.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td><span class="badge {% if e.grado >= 3 %}bg-danger{% elif e.grado == 2 %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ e.grado }}</span></td>
+                        <td>{{ e.etiqueta }}</td>
+                        <td>{{ "%.2f"|format(e.gravedad_crisp) if e.gravedad_crisp else '-' }}</td>
+                        <td>{{ e.glucosa_mgdl or '-' }} mg/dL</td>
+                        <td>{{ e.confianza or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-muted text-center">Sin evaluaciones</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de seguimientos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white"><h5 class="mb-0">Seguimientos del Paciente</h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Fecha</th><th>Grado</th><th>Etiqueta</th><th>Glucosa</th><th>Notas</th></tr></thead>
+                    <tbody>
+                    {% for s in seguimientos %}
+                    <tr>
+                        <td>{{ s.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td><span class="badge {% if s.grado >= 3 %}bg-danger{% elif s.grado == 2 %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ s.grado }}</span></td>
+                        <td>{{ s.etiqueta }}</td>
+                        <td>{{ s.glucosa_mgdl or '-' }} mg/dL</td>
+                        <td>{{ s.notas or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-muted text-center">Sin seguimientos</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('medico_evaluar', paciente_id=paciente.id) }}" class="btn btn-primary mt-3"><i class="bi bi-clipboard2-pulse"></i> Nueva Evaluación</a>
+    <a href="{{ url_for('descargar_reporte_paciente', paciente_id=paciente.id) }}" class="btn btn-danger mt-3"><i class="bi bi-file-earmark-pdf"></i> Descargar Reporte PDF</a>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+const chartData = {{ chart_data|safe }};
+const fechas = chartData.map(d => d.fecha);
+const grados = chartData.map(d => d.grado);
+const glucosas = chartData.map(d => d.glucosa);
+const crisps = chartData.map(d => d.gravedad_crisp);
+
+const gradoColors = grados.map(g => g >= 4 ? '#d32f2f' : g >= 3 ? '#f57c00' : g >= 2 ? '#fbc02d' : '#388e3c');
+
+if (fechas.length > 0) {
+    new Chart(document.getElementById('chartGravedad'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Grado',
+                data: grados,
+                borderColor: '#1565c0',
+                backgroundColor: 'rgba(21, 101, 192, 0.1)',
+                pointBackgroundColor: gradoColors,
+                pointRadius: 6,
+                fill: true,
+                tension: 0.3
+            }, {
+                label: 'Gravedad Crisp',
+                data: crisps,
+                borderColor: '#7b1fa2',
+                borderDash: [5,5],
+                pointRadius: 3,
+                fill: false,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { min: 0, max: 5, title: { display: true, text: 'Gravedad' } },
+                x: { ticks: { maxRotation: 45 } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('chartGlucosa'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Glucosa (mg/dL)',
+                data: glucosas,
+                borderColor: '#7b1fa2',
+                backgroundColor: 'rgba(123, 31, 162, 0.1)',
+                pointRadius: 5,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { title: { display: true, text: 'Glucosa (mg/dL)' } },
+                x: { ticks: { maxRotation: 45 } }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line130: { type: 'line', yMin: 130, yMax: 130, borderColor: '#f57c00', borderDash: [5,5], label: { display: true, content: '130 mg/dL' } },
+                        line250: { type: 'line', yMin: 250, yMax: 250, borderColor: '#d32f2f', borderDash: [5,5], label: { display: true, content: '250 mg/dL' } }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Guía de Cuidados{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-book text-success"></i> Guía Rápida de Cuidado del Pie Diabético</h2>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white"><h5 class="mb-0">🧼 Limpieza Diaria</h5></div>
+                <div class="card-body">
+                    <ol>
+                        <li>Lava tus pies con <strong>agua tibia</strong> (no caliente) y jabón suave</li>
+                        <li><strong>Seca bien entre los dedos</strong></li>
+                        <li>Aplica crema hidratante (no entre los dedos)</li>
+                        <li>Revisa cada día si hay heridas, ampollas o cambios de color</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white"><h5 class="mb-0">🩹 Si Tienes una Herida</h5></div>
+                <div class="card-body">
+                    <ol>
+                        <li>Limpia con <strong>solución salina</strong> (agua con sal estéril)</li>
+                        <li>Cubre con <strong>apósito estéril</strong> limpio</li>
+                        <li><strong>No uses alcohol, agua oxigenada ni yodo</strong> directamente</li>
+                        <li>Cambia el apósito diariamente o cuando esté sucio</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white"><h5 class="mb-0">👟 Cuidado del Calzado</h5></div>
+                <div class="card-body">
+                    <ul>
+                        <li>Usa zapatos cómodos, sin costuras internas</li>
+                        <li>Revisa el interior del zapato antes de ponértelo</li>
+                        <li><strong>Nunca camines descalzo</strong></li>
+                        <li>Usa calcetines de algodón sin costuras</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100 border-danger">
+                <div class="card-header bg-danger text-white"><h5 class="mb-0">🚨 Ve INMEDIATAMENTE a Urgencias si:</h5></div>
+                <div class="card-body">
+                    <ul>
+                        <li>Tienes <strong>fiebre mayor a 38°C</strong></li>
+                        <li>El pie se pone <strong>muy rojo, caliente o hinchado</strong> de repente</li>
+                        <li>Ves <strong>hueso o tendón</strong> en la herida</li>
+                        <li>El dolor es <strong>muy intenso o desaparece de repente</strong></li>
+                        <li>Hay <strong>mal olor fuerte</strong> o secreción oscura</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white"><h5 class="mb-0">📅 Controles Médicos Recomendados</h5></div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="table-light"><tr><th>Situación</th><th>Frecuencia</th></tr></thead>
+                <tbody>
+                    <tr><td>Sin heridas</td><td>Cada 3-6 meses</td></tr>
+                    <tr><td>Con herida leve</td><td>Cada semana</td></tr>
+                    <tr><td>Con herida moderada</td><td>Cada 2-3 días</td></tr>
+                    <tr class="table-danger"><td>Con herida grave</td><td><strong>Hospitalización</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <small class="text-muted"><em>Basado en NOM-015-SSA2-2010 e IWGDF 2023</em></small>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Registro{% endblock %}
+{% block body_class %}bg-light{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4"><i class="bi bi-person-plus text-primary"></i> Registro</h3>
+                    <form method="POST" id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre completo <span class="text-danger">*</span></label>
+                            <input type="text" name="nombre_completo" class="form-control" required placeholder="Ej: Juan García López">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Usuario <span class="text-danger">*</span></label>
+                            <input type="text" name="username" class="form-control" required placeholder="Nombre de usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" required placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" required minlength="6" placeholder="Mínimo 6 caracteres">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de cuenta <span class="text-danger">*</span></label>
+                            <select name="rol" class="form-select" id="rolSelect" onchange="toggleFields()">
+                                <option value="paciente">Paciente</option>
+                                <option value="medico">Médico</option>
+                            </select>
+                        </div>
+
+                        <!-- Campos de Médico -->
+                        <div class="mb-3" id="cedulaDiv" style="display:none">
+                            <label class="form-label">Cédula Profesional <span class="text-danger">*</span></label>
+                            <input type="text" name="cedula_profesional" class="form-control" placeholder="Número de cédula">
+                        </div>
+
+                        <!-- Campos de Paciente -->
+                        <div id="pacienteFields">
+                            <hr>
+                            <h5 class="mb-3"><i class="bi bi-heart-pulse text-danger"></i> Datos Clínicos del Paciente</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Edad (años) <span class="text-danger">*</span></label>
+                                    <input type="number" name="edad" class="form-control" id="edadInput" min="1" max="120" required placeholder="Ej: 55">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Sexo <span class="text-danger">*</span></label>
+                                    <select name="sexo" class="form-select" id="sexoInput" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Tipo de diabetes <span class="text-danger">*</span></label>
+                                    <select name="tipo_diabetes" class="form-select" id="tipoDiabetesInput" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="Tipo 1">Tipo 1</option>
+                                        <option value="Tipo 2">Tipo 2</option>
+                                        <option value="Gestacional">Gestacional</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Años desde el diagnóstico</label>
+                                    <input type="number" name="anios_diagnostico" class="form-control" min="0" max="80" placeholder="Ej: 10 (opcional)">
+                                    <small class="text-muted">Campo informativo, opcional</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Registrarse</button>
+                    </form>
+                    <div class="text-center">
+                        <small>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function toggleFields() {
+    const rol = document.getElementById('rolSelect').value;
+    const cedulaDiv = document.getElementById('cedulaDiv');
+    const pacienteFields = document.getElementById('pacienteFields');
+    const edadInput = document.getElementById('edadInput');
+    const sexoInput = document.getElementById('sexoInput');
+    const tipoDiabetesInput = document.getElementById('tipoDiabetesInput');
+
+    if (rol === 'medico') {
+        cedulaDiv.style.display = 'block';
+        pacienteFields.style.display = 'none';
+        edadInput.removeAttribute('required');
+        sexoInput.removeAttribute('required');
+        tipoDiabetesInput.removeAttribute('required');
+    } else {
+        cedulaDiv.style.display = 'none';
+        pacienteFields.style.display = 'block';
+        edadInput.setAttribute('required', '');
+        sexoInput.setAttribute('required', '');
+        tipoDiabetesInput.setAttribute('required', '');
+    }
+}
+// Inicializar al cargar
+document.addEventListener('DOMContentLoaded', toggleFields);
+</script>
+{% endblock %}

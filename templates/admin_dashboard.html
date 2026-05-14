@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-speedometer2 text-primary"></i> Dashboard Administrador</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-people display-4"></i>
+                    <h3>{{ total_usuarios }}</h3>
+                    <p class="mb-0">Usuarios</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-heart display-4"></i>
+                    <h3>{{ total_pacientes }}</h3>
+                    <p class="mb-0">Pacientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-clipboard2-pulse display-4"></i>
+                    <h3>{{ total_evaluaciones }}</h3>
+                    <p class="mb-0">Evaluaciones</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-bell display-4"></i>
+                    <h3>{{ alertas_activas }}</h3>
+                    <p class="mb-0">Alertas Activas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0">Últimas Evaluaciones</h5></div>
+                <div class="card-body">
+                    {% if ultimas_evaluaciones %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Fecha</th><th>Paciente</th><th>Grado</th><th>Etiqueta</th></tr></thead>
+                            <tbody>
+                            {% for ev in ultimas_evaluaciones %}
+                            <tr>
+                                <td>{{ ev.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ ev.paciente.nombre if ev.paciente else 'N/A' }}</td>
+                                <td>
+                                    <span class="badge {% if ev.grado == 4 %}bg-danger{% elif ev.grado == 3 %}bg-warning text-dark{% elif ev.grado == 2 %}bg-info{% else %}bg-success{% endif %}">
+                                        Grado {{ ev.grado }}
+                                    </span>
+                                </td>
+                                <td>{{ ev.etiqueta }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">No hay evaluaciones registradas aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0">Médicos Registrados</h5></div>
+                <div class="card-body">
+                    {% for m in medicos %}
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person-badge display-6 text-success me-3"></i>
+                        <div>
+                            <strong>{{ m.nombre_completo }}</strong><br>
+                            <small class="text-muted">Cédula: {{ m.cedula_profesional or 'N/A' }}</small>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No hay médicos registrados.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card shadow-sm mt-3">
+                <div class="card-body text-center">
+                    <h6>Seguimientos Diarios</h6>
+                    <h2 class="text-primary">{{ total_seguimientos }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

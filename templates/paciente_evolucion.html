@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}Mi Evolución{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-graph-up text-info"></i> Mi Evolución</h2>
+
+    {% if seguimientos %}
+    <div class="mb-3 text-end">
+        <a href="{{ url_for('descargar_resumen_paciente') }}" class="btn btn-danger">
+            <i class="bi bi-file-earmark-pdf"></i> Descargar Mi Resumen PDF
+        </a>
+    </div>
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-activity"></i> Estado del Pie en el Tiempo</h5></div>
+                <div class="card-body"><canvas id="chartEvolucion" height="200"></canvas></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-droplet"></i> Glucosa en el Tiempo</h5></div>
+                <div class="card-body"><canvas id="chartGlucosa" height="200"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white"><h5 class="mb-0">📋 Historial de Seguimientos</h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Fecha</th><th>Estado</th><th>Glucosa</th><th>Notas</th></tr></thead>
+                    <tbody>
+                    {% for s in seguimientos|reverse %}
+                    <tr>
+                        <td>{{ s.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>
+                            <span class="badge {% if s.grado >= 3 %}bg-danger{% elif s.grado == 2 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                {% if s.grado == 4 %}🔴{% elif s.grado == 3 %}🟠{% elif s.grado == 2 %}🟡{% else %}🟢{% endif %}
+                                {{ s.etiqueta }}
+                            </span>
+                        </td>
+                        <td>{{ s.glucosa_mgdl or '-' }} mg/dL</td>
+                        <td>{{ s.notas or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle display-4"></i>
+        <h4 class="mt-2">Aún no tienes seguimientos</h4>
+        <p>Registra tu primer seguimiento para ver tu evolución.</p>
+        <a href="{{ url_for('paciente_seguimiento') }}" class="btn btn-primary"><i class="bi bi-clipboard-check"></i> Registrar Seguimiento</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+const chartData = {{ chart_data|safe }};
+if (chartData.length > 0) {
+    const fechas = chartData.map(d => d.fecha);
+    const grados = chartData.map(d => d.grado);
+    const glucosas = chartData.map(d => d.glucosa);
+    const gradoColors = grados.map(g => g >= 4 ? '#d32f2f' : g >= 3 ? '#f57c00' : g >= 2 ? '#fbc02d' : '#388e3c');
+
+    new Chart(document.getElementById('chartEvolucion'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Estado del pie',
+                data: grados,
+                borderColor: '#1565c0',
+                backgroundColor: 'rgba(21, 101, 192, 0.1)',
+                pointBackgroundColor: gradoColors,
+                pointRadius: 6,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    min: 0, max: 5,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(v) {
+                            return ['', 'Normal', 'Leve', 'Moderado', 'Grave'][v] || '';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('chartGlucosa'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Glucosa (mg/dL)',
+                data: glucosas,
+                borderColor: '#7b1fa2',
+                backgroundColor: 'rgba(123, 31, 162, 0.1)',
+                pointRadius: 5,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: { responsive: true }
+    });
+}
+</script>
+{% endblock %}

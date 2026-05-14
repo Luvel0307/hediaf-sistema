@@ -1,0 +1,103 @@
+/* ============================================
+   Sistema Integral de Pie Diabético - CSS
+   ============================================ */
+
+:root {
+    --color-grave: #d32f2f;
+    --color-moderada: #f57c00;
+    --color-leve: #fbc02d;
+    --color-normal: #388e3c;
+    --primary: #1565c0;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+}
+
+/* Badge de grado */
+.badge-grado-1 { background-color: var(--color-normal); }
+.badge-grado-2 { background-color: var(--color-leve); color: #333; }
+.badge-grado-3 { background-color: var(--color-moderada); }
+.badge-grado-4 { background-color: var(--color-grave); }
+
+/* Semáforo */
+.semaforo-container {
+    background: #222;
+    border-radius: 20px;
+    padding: 20px 10px;
+    display: inline-block;
+}
+
+.semaforo-luz {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+}
+
+/* Form range */
+.form-range::-webkit-slider-thumb {
+    background: var(--primary);
+}
+
+/* Progress bar */
+.progress {
+    border-radius: 10px;
+}
+
+/* Alert animations */
+.alert-danger {
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% { border-color: #dc3545; }
+    50% { border-color: #f8d7da; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .display-4 { font-size: 2rem; }
+    .container-fluid { padding: 0 10px; }
+}
+
+/* Footer */
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Table hover */
+.table-hover tbody tr:hover {
+    background-color: rgba(21, 101, 192, 0.05);
+}
+
+/* Print styles */
+@media print {
+    .navbar, footer, .btn { display: none !important; }
+    .card { border: 1px solid #ddd !important; box-shadow: none !important; }
+}
